@@ -23,7 +23,7 @@ class _TaskManagerAppState extends State<TaskManagerApp> {
       ),
       home: const SplashScreen(),
     );
-  }
+  }//
 
   ElevatedButtonThemeData _elevatedButtonThemeData() {
     return ElevatedButtonThemeData(
