@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:new_task_manager/controller/auth_controller.dart';
+import 'package:new_task_manager/screen/main_bottom_nav_bar_navigation_screen.dart';
 import 'package:new_task_manager/screen/sign_in_screen.dart';
 import '../utilitis/assets_path.dart';
 import '../widigets/screen_background.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,19 +14,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> _moveToNextScreen() async {
+    await Future.delayed(Duration(seconds: 2));
+    await AuthController.getAccessToken();
+    if (AuthController.isLoggedIn()){
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => MainBottomNavBarScreen()));
 
-  Future<void>_moveToNextScreen()async{
-   await Future.delayed( Duration(seconds: 2));
-   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignInScreen()));
+    }
+    else{
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => SignInScreen()));
+    }
+
   }
 
   @override
   void initState() {
     super.initState();
-_moveToNextScreen();
+    _moveToNextScreen();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
