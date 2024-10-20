@@ -19,12 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
     await AuthController.getAccessToken();
     if (AuthController.isLoggedIn()){
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MainBottomNavBarScreen()));
+          context, MaterialPageRoute(builder: (context) => const MainBottomNavBarScreen()));
 
     }
     else{
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SignInScreen()));
+          context, MaterialPageRoute(builder: (context) => const SignInScreen()));
     }
 
   }

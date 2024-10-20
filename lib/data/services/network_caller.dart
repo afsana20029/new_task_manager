@@ -1,7 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:new_task_manager/app.dart';
+import 'package:new_task_manager/controller/auth_controller.dart';
+import 'package:new_task_manager/screen/sign_in_screen.dart';
 import '../models/network_response.dart';
+
 class NetworkCaller {
   static Future<NetworkResponse> getRequest({required String url}) async {
     try {
@@ -16,7 +22,13 @@ class NetworkCaller {
           statusCode: response.statusCode,
           responseData: decodeData,
         );
-      } else {
+      }else if (response.statusCode == 401) {
+        _goToLogin();
+        return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessage: 'Unauthenticated');}
+     else {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
@@ -35,12 +47,18 @@ class NetworkCaller {
       {required String url, Map<String, dynamic>? body}) async {
     try {
       Uri uri = Uri.parse(url);
-      debugPrint(url);
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'token': AuthController.accessToken.toString()
+      };
+
+      printRequest(url, body, headers);
       final Response response = await post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: jsonEncode(body),
       );
+      printRequest(url, body, response.headers);
       printResponse(url, response);
       if (response.statusCode == 200) {
         final decodeData = jsonDecode(response.body);
@@ -58,6 +76,12 @@ class NetworkCaller {
           statusCode: response.statusCode,
           responseData: decodeData,
         );
+      } else if (response.statusCode == 401) {
+        _goToLogin();
+        return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessage: 'Unauthenticated');
       } else {
         return NetworkResponse(
           isSuccess: false,
@@ -75,8 +99,22 @@ class NetworkCaller {
 
   static void printResponse(String url, Response response) {
     debugPrint(
-      'URL: $url\nRESPONSE CODE: ${response.statusCode}\nBODY: ${response.body}',
+      'REQUEST:\nURL: $url\nRESPONSE CODE: ${response.statusCode}\nBODY: ${response.body}',
     );
   }
-}
 
+  static void printRequest(
+      String url, Map<String, dynamic>? body, Map<String, dynamic>? headers) {
+    debugPrint(
+      'URL: $url\nBODY: $body\nHEADERS: $headers}',
+    );
+  }
+
+  static Future <void> _goToLogin() async{
+ await  AuthController.clearUserData();
+    Navigator.pushAndRemoveUntil(
+        TaskManagerApp.navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (context) => const SignInScreen()),
+        (p) => false);
+  }
+}
