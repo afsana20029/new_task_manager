@@ -18,7 +18,7 @@ class SignInScreen extends StatefulWidget {
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
-//jkojijiuhgyftdr
+
 class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailTEController = TextEditingController();
@@ -157,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
     _inProgress = false;
     setState(() {});
     if (response.isSuccess) {
-      await AuthController.saveAccessToken(response.responseData['token']);
+      // await AuthController.saveAccessToken(response.responseData['token']);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MainBottomNavBarScreen()),
@@ -186,4 +186,3 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 }
-

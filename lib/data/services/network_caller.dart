@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-
-
 import '../models/network_response.dart';
-
 class NetworkCaller {
   static Future<NetworkResponse> getRequest({required String url}) async {
     try {
@@ -83,3 +79,4 @@ class NetworkCaller {
     );
   }
 }
+

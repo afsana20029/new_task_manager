@@ -1,13 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import '../data/models/network_response.dart';
-import '../data/services/network_caller.dart';
-import '../data/utils/urls.dart';
+import 'package:new_task_manager/data/models/network_response.dart';
+import 'package:new_task_manager/data/services/network_caller.dart';
+import 'package:new_task_manager/data/utils/urls.dart';
+import 'package:new_task_manager/widigets/snack_bar_message.dart';
 import '../utilitis/app_colors.dart';
 import '../widigets/centered_circular_progress_indicator.dart';
 import '../widigets/screen_background.dart';
-import '../widigets/snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -24,7 +23,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   bool _inProgress = false;
-
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -93,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: const InputDecoration(hintText: 'Last name'),
             validator: (String? value) {
               if (value?.isEmpty ?? true) {
-                return 'Enter last name';
+                return "Enter valid email";
               }
               return null;
             },
@@ -158,35 +156,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _onTapNextButton() {
     if (_formKey.currentState!.validate()) {
-      _signUp();
+     _signUp();
     }
+
   }
 
   Future<void> _signUp() async {
     _inProgress = true;
     setState(() {});
+    Map<String,dynamic>requestBody={
+      "email":_emailTEController.text.trim(),
+      "firstName":_firstNameTEController.text.trim(),
+      "lastName":_lastNameTEController.text.trim(),
+      "mobile":_mobileTEController.text.trim(),
+      "password":_passwordTEController.text,
 
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text,
-      "photo":""
     };
-
     NetworkResponse response = await NetworkCaller.postRequest(
-      url: Urls.registration,
-      body: requestBody,
-    );
-    _inProgress = false;
-    setState(() {});
+        url:Urls.registration,
+    body: requestBody);
+    _inProgress=false;
+    setState(() {
 
+    });
     if (response.isSuccess) {
       _clearTextFields();
-      showSnackBarMessage(context,'New user created');
+     showSnackBarMessage(context,'New user created');
     } else {
-      showSnackBarMessage(context, response.errorMessage, true);
+      showSnackBarMessage(context,response.errorMessage,true);
     }
   }
 
@@ -201,14 +198,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _onTapSignIn() {
     Navigator.pop(context);
   }
-
   @override
-  void dispose() {
-    _emailTEController.dispose();
-    _firstNameTEController.dispose();
-    _lastNameTEController.dispose();
-    _mobileTEController.dispose();
+ void dispose() {
+   _firstNameTEController.dispose();
+   _lastNameTEController.dispose();
+   _emailTEController.dispose();
     _passwordTEController.dispose();
+    _mobileTEController.dispose();
     super.dispose();
   }
 }
