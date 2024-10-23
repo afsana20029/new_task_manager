@@ -67,7 +67,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                 const SizedBox(height: 16),
                 Visibility(
                   visible: !_addNewTaskProgress,
-                  replacement: CenteredCircularProgressIndicator(),
+                  replacement: const CenteredCircularProgressIndicator(),
                   child: ElevatedButton(
                     onPressed: _onTapSubmitButton,
                     child: const Icon(Icons.arrow_circle_right_outlined),
